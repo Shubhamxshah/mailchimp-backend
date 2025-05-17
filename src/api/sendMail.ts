@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import {v4 as uuid} from "uuid";
 import Track from "../model/track.model";
+import { sendMail } from "../utils/send-mail";
 
 const app = new Hono();
 
@@ -20,10 +21,10 @@ app.post("/send-mail", async (c) => {
 
   try {
     await Track.create({ trackingId })
-    // mail sending logic
-
+    await sendMail(emails, trackingId)
   } catch (error) {
-    
+    console.log(error)
+    return c.json({error: "failed to send email"})
   }
 
 });
